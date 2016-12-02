@@ -4,7 +4,6 @@ import com.github.zachalbia.fgcj.runner.Runner
 import com.github.zachalbia.fgcj.solutions.CommonParsers._
 import com.github.zachalbia.fgcj.solutions.{Pipe, Problem}
 import fastparse.all._
-import fastparse.core.Parser
 import fs2.Stream
 
 import scala.language.higherKinds
@@ -40,8 +39,7 @@ object StoreCredit extends Runner {
     val numCases, credit, numItems = oneNumLine
     def prices(n: Int) = P(number.rep(exactly=n, sep=" ") ~ "\n".?)
     val rawCase = P(credit ~/ (for (i <- numItems; ps <- prices(i)) yield ps))
-    val solution: Parser[Solution, Char, String] =
-      rawCase.map{case (c, prices) => Case(c, prices)}.map(_.solve)
+    val solution = rawCase.map{case (c, prices) => Case(c, prices)}.map(_.solve)
   }
 
   private case class Case(credit: Int, prices: Seq[Int]) {
