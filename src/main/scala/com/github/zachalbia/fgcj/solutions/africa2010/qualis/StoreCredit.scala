@@ -1,6 +1,8 @@
-package com.github.zachalbia.fgcj.solutions
+package com.github.zachalbia.fgcj.solutions.africa2010.qualis
 
+import com.github.zachalbia.fgcj.runner.Runner
 import com.github.zachalbia.fgcj.solutions.CommonParsers._
+import com.github.zachalbia.fgcj.solutions.{Pipe, Problem}
 import fastparse.all._
 import fastparse.core.Parser
 import fs2.Stream
@@ -9,9 +11,8 @@ import scala.language.higherKinds
 
 final class StoreCredit[F[_]] extends Problem[F] {
   val toSolution: Pipe[F] = { lines =>
-    val linesMin1 = lines.drop(1)
-    val grouping = 3
-    groupBy(linesMin1, grouping).map(_._1.mkString("\n"))
+    groupBy(lines.drop(1), 3)
+      .map(_._1.mkString("\n"))
       .map(StoreCredit.solve).zipWithIndex
       .map {
         case (Some((a, b)), i) => s"Case #${i + 1}: $a $b"
@@ -25,8 +26,8 @@ final class StoreCredit[F[_]] extends Problem[F] {
   }
 }
 
-object StoreCredit {
-  def apply[F[_]] = new StoreCredit[F]
+object StoreCredit extends Runner {
+  val problem = new StoreCredit
 
   private def solve(`case`: String): Parser.Solution =
     Parser.solution.parse(`case`).get.value
@@ -37,11 +38,8 @@ object StoreCredit {
     type Solution = Option[(FirstIndex, SecondIndex)]
 
     val numCases, credit, numItems = oneNumLine
-
-    def prices(n: Int) = P( number.rep(exactly=n, sep=" ") ~ "\n".? )
-
+    def prices(n: Int) = P(number.rep(exactly=n, sep=" ") ~ "\n".?)
     val rawCase = P(credit ~/ (for (i <- numItems; ps <- prices(i)) yield ps))
-
     val solution: Parser[Solution, Char, String] =
       rawCase.map{case (c, prices) => Case(c, prices)}.map(_.solve)
   }

@@ -17,11 +17,7 @@ object Settings {
     "-feature"
   )
 
-  val runnerDeps = Def.setting(Seq(
-    "org.scalaz" %% "scalaz-core" % versions.scalazCore
-  ))
-
-  val solutionDeps = Def.setting(Seq(
+  val libraryDependencies = Def.setting(Seq(
     "com.lihaoyi" %% "fastparse" % versions.fastParse,
     "co.fs2" %% "fs2-core" % versions.fs2,
     "co.fs2" %% "fs2-io" % versions.fs2

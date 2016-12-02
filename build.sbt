@@ -1,22 +1,10 @@
 name := "functional-google-code-jam"
 
-version := "1.0"
+version := Settings.version
 
-lazy val runner = (project in file("runner"))
-  .settings(
-    name := "runner",
-    version := Settings.version,
-    scalaVersion := Settings.versions.scala,
-    scalacOptions := Settings.scalacOptions,
-    libraryDependencies := Settings.runnerDeps.value
-  ).dependsOn(solutions)
+scalaVersion := Settings.versions.scala
 
-lazy val solutions = (project in file("solutions"))
-  .settings(
-    name := "solutions",
-    version := Settings.version,
-    scalaVersion := Settings.versions.scala,
-    scalacOptions := Settings.scalacOptions,
-    libraryDependencies := Settings.solutionDeps.value
-  )
+scalacOptions := Settings.scalacOptions
+
+libraryDependencies := Settings.libraryDependencies.value
     

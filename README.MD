@@ -13,6 +13,4 @@ Running
 =======
 Run with sbt as follows:
 
-`sbt > runner/run <input_path> <output_path> <problem>`
-
-e.g. `sbt > runner/run path/to/input path/to/output StoreCredit`.
+`sbt > run <input_path> <output_path>`

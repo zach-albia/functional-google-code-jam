@@ -2,24 +2,21 @@ package com.github.zachalbia.fgcj.runner
 
 import java.nio.file.Paths
 
-import com.github.zachalbia.fgcj.runner.Solutions._
-import com.github.zachalbia.fgcj.solutions.Sink
+import com.github.zachalbia.fgcj.solutions.{Problem, Sink}
 import fs2.{Stream, Task, io, text}
 
-import scalaz.{-\/, \/-}
-
-object Runner {
-  final val ChunkSize = 4096
+trait Runner {
+  private final val ChunkSize = 4096
+  protected val problem: Problem[Task]
 
   def main(args: Array[String]): Unit =
-    run(args(0), args(1), args(2)).unsafeRun()
+    pureMain(args).unsafeRun()
 
-  private def run(in: String, out: String, problem: String): Task[Unit] =
-    lookFor(problem) match {
-      case \/-(soln) => import soln._
-        (toUtf8Lines andThen toSolution andThen writeToFile(out))(in)
-      case -\/(err) => Task.now { println(err) }
-    }
+  private def pureMain(args: Array[String]): Task[Unit] =
+    solve(args(0), args(1))
+
+  private def solve(in: String, out: String): Task[Unit] =
+    (toUtf8Lines andThen problem.toSolution andThen writeToFile(out))(in)
 
   private val toUtf8Lines: String => Stream[Task, String] = { path =>
     io.file.readAll[Task](Paths.get(path), ChunkSize)
