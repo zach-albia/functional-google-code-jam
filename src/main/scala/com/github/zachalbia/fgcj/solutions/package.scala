@@ -10,7 +10,7 @@ package object solutions {
   final type Sink[F[_]] = Stream[F, String] => F[Unit]
 
   object CommonParsers {
-    val number: P[Int] = P(CharIn('0'to'9').rep(1).!.map(_.toInt))
-    val oneNumLine: P[Int] = number ~ "\n".?
+    val number: P[Int] = P(CharIn('0' to '9').rep(1).!.map(_.toInt))
+    val oneNumLine: P[Int] = number ~ "\n"
   }
 }
