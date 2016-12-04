@@ -1,6 +1,6 @@
 package com.github.zachalbia.fgcj.solutions.africa2010.qualis
 
-import com.github.zachalbia.fgcj.CommonGen._
+import com.github.zachalbia.fgcj.TestingCommons._
 import fs2.Stream
 import org.scalacheck.Prop._
 import org.scalacheck.{Gen, Properties}
@@ -11,7 +11,7 @@ object StoreCreditSpec extends Properties("StoreCredit") {
   case class Case(credit: Int, prices: List[Int], solution: (Int, Int)) {
     val lines: String = s"$credit\n${prices.size}\n${prices.mkString(" ")}\n"
     val solutionIndices: (Int, Int) = {
-      val indices = List(prices.indexOf(solution._1), prices.indexOf(solution._2)).sorted
+      val indices = List(prices.indexOf(solution._1), prices.lastIndexOf(solution._2)).sorted
       (indices(0) + 1, indices(1) + 1)
     }
   }
@@ -37,7 +37,7 @@ object StoreCreditSpec extends Properties("StoreCredit") {
     val stream = Stream("\n") ++ Stream.emits(lines)
     try {
       val result = new StoreCredit[Nothing].toSolution(stream).map(
-        resultRegex.findFirstMatchIn(_).get.group(1).split(' ').map(_.toInt))
+        getCaseBody(_).split(' ').map(_.toInt))
       val actual = result.map(pair => (pair(0), pair(1))).toList
       solutions == actual
     } catch {
